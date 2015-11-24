@@ -20,7 +20,7 @@ RUN set -xe \
 	&& rm jetty.tar.gz* \
 	&& mkdir -p "$JETTY_BASE" \
 	&& mkdir -p "$JETTY_RUN" "$TMPDIR" \
-	&& chmod 01777 "$JETTY_RUN" "$TMPDIR" \
+	&& chmod -R og+rw "$JETTY_HOME" "$JETTY_RUN" "$TMPDIR" \
         && chown -R 1001:1001 "$JETTY_RUN" "$TMPDIR" "$JETTY_BASE" \
 	&& yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel \
 	&& (curl -0 http://www.us.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz | tar -zx -C /usr/local) \
