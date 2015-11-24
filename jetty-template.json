@@ -141,7 +141,7 @@
               ],
               "from": {
                 "kind": "ImageStreamTag",
-                "name": "jetty:latest"
+                "name": "jetty-example:latest"
               }
             }
           },
