@@ -169,22 +169,6 @@
                   {
                     "containerPort": 8080
                   }
-                ],
-                "env": [
-                  {
-                    "name": "JETTY_HOME",
-                    "value": "${JETTY_HOME}"
-                  },
-{
-                    "name": "JETTY_BASE",
-                    "value": "${JETTY_BASE}"
-                  },
-
-                  {
-                    "name": "TMPDIR",
-                    "value": "${TMPDIR}"
-                  }
-                  
                 ]
               }
             ]
