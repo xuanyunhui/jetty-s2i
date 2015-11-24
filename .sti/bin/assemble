@@ -9,29 +9,36 @@
 #
 
 if [ "$1" = "-h" ]; then
-	# If the 'docker.io/jetty' assemble script is executed with '-h' flag,
+	# If the 'rmartine/jetty-s2i' assemble script is executed with '-h' flag,
 	# print the usage.
 	exec /usr/local/sti/usage
 fi
 
-# Restore artifacts from the previous build (if they exist).
-#
-if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
-  echo "---> Restoring build artifacts"
-  mv /tmp/artifacts/. ./
-fi
-
 echo "---> Installing application source"
-cp -Rf /tmp/src/. ./
-
 deploy_dir=/usr/local/jetty/webapps
+local_source_dir=/tmp/jetty/source
+mkdir -p $local_source_dir
 
 echo "---> Building application from source"
-# TODO: Add build steps for your application, eg npm install, bundle install
-# If a pom.xml is present, this is a normal build scenario 
-# so run maven.
+cp -ad /tmp/src/* $local_source_dir
 if [ -f "$local_source_dir/pom.xml" ]; then
-  mvn clean install -Popenshift -Dskiptests
+	
+	pushd $local_source_dir &> /dev/null
+	JAVA_HOME=/etc/alternatives/java_sdk_1.7.0  
+	mvn clean package -Popenshift -DskipTests
+	err=$?
+	
+	if [ $err -ne 0 ]; then
+		echo "Aborting due to error code $err from mvn package"
+		exit $err
+	fi
 
-  cp $local_source_dir/target/*.war $deploy_dir >& /dev/null
+	echo "Copying built war files into $deploy_dir for later deployment..."
+	
+	if [ -d $local_source_dir/target ]; then
+		cp $local_source_dir/target/*.war $deploy_dir >& /dev/null
+	fi
+
+	echo "...done"
+	popd &> /dev/null
 fi
