@@ -24,9 +24,9 @@ RUN set -xe \
 	&& yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel \
 	&& (curl -0 http://www.us.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz | tar -zx -C /usr/local) \
   && ln -sf /usr/local/apache-maven-3.3.3/bin/mvn /usr/local/bin/mvn \
-	&& yum clean all -y \
-	&& modules="$(grep -- ^--module= "$JETTY_HOME/start.ini" | cut -d= -f2 | paste -d, -s)" \
-  && java -jar "$JETTY_HOME/start.jar" --add-to-startd="$modules,setuid"
+	&& yum clean all -y
+	#&& modules="$(grep -- ^--module= "$JETTY_HOME/start.ini" | cut -d= -f2 | paste -d, -s)" \
+  #&& java -jar "$JETTY_HOME/start.jar" --add-to-startd="$modules,setuid"
 
 # TODO: Set labels used in OpenShift to describe the builder image
 #LABEL io.k8s.description="Platform for building xyz" \
@@ -38,7 +38,6 @@ LABEL io.s2i.scripts-url=image:///usr/local/sti
 
 # TODO: Copy the S2I scripts to /usr/local/sti, since openshift/base-centos7 image sets io.openshift.s2i.scripts-url label that way, or update that label
 COPY ./.sti/bin/ /usr/local/sti
-COPY docker-entrypoint.bash /tmp/
 
 # This default user is created in the openshift/base-centos7 image
 USER 1001

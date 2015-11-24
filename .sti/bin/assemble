@@ -33,9 +33,9 @@ if [ -f "$local_source_dir/pom.xml" ]; then
 		exit $err
 	fi
 
-	echo "Copying built war files into $deploy_dir for later deployment..."
-	
 	if [ -d $local_source_dir/target ]; then
+		echo "Copying built war/jar files into $deploy_dir for later deployment..."
+		cp $local_source_dir/target/*.jar $deploy_dir >& /dev/null
 		cp $local_source_dir/target/*.war $deploy_dir >& /dev/null
 	fi
 
