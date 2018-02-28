@@ -24,7 +24,7 @@ cp -ad /tmp/src/* $local_source_dir
 if [ -f "$local_source_dir/pom.xml" ]; then
 	
 	pushd $local_source_dir &> /dev/null
-	JAVA_HOME=/etc/alternatives/java_sdk_1.7.0  
+	JAVA_HOME=/etc/alternatives/java_sdk_1.8.0  
 	mvn clean package -Popenshift -DskipTests
 	err=$?
 	
