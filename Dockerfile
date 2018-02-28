@@ -12,6 +12,16 @@ ENV JETTY_RUN /run/jetty
 ENV JETTY_STATE $JETTY_RUN/jetty.state
 ENV TMPDIR /tmp/jetty
 
+# Agent bond including Jolokia and jmx_exporter
+ADD agent-bond-opts /opt/run-java-options
+RUN mkdir -p /opt/agent-bond \
+ && curl http://central.maven.org/maven2/io/fabric8/agent-bond-agent/1.2.0/agent-bond-agent-1.2.0.jar \
+          -o /opt/agent-bond/agent-bond.jar \
+ && chmod 444 /opt/agent-bond/agent-bond.jar \
+ && chmod 755 /opt/run-java-options
+ADD jmx_exporter_config.yml /opt/agent-bond/
+EXPOSE 8778 9779
+
 RUN set -xe \
 	&& curl -SL "https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/$JETTY_VERSION/jetty-distribution-$JETTY_VERSION.tar.gz" -o jetty.tar.gz \
 	&& tar -xvf jetty.tar.gz --strip-components=1 \
@@ -28,6 +38,9 @@ RUN set -xe \
 	&& yum clean all -y
 	#&& modules="$(grep -- ^--module= "$JETTY_HOME/start.ini" | cut -d= -f2 | paste -d, -s)" \
   #&& java -jar "$JETTY_HOME/start.jar" --add-to-startd="$modules,setuid"
+ADD jetty-logging.xml /opt/jetty/etc/ 
+COPY run-java.sh /opt/
+RUN chmod 755 /opt/run-java.sh
 
 # TODO: Set labels used in OpenShift to describe the builder image
 #LABEL io.k8s.description="Platform for building xyz" \
