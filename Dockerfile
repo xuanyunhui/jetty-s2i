@@ -6,7 +6,7 @@ ENV JETTY_HOME /usr/local/jetty
 RUN mkdir -p "$JETTY_HOME"
 WORKDIR $JETTY_HOME
 
-ENV JETTY_VERSION 9.3.5.v20151012
+ENV JETTY_VERSION 9.4.8.v20171121
 ENV JETTY_BASE /var/lib/jetty
 ENV JETTY_RUN /run/jetty
 ENV JETTY_STATE $JETTY_RUN/jetty.state
@@ -33,8 +33,6 @@ RUN set -xe \
 	&& chmod -R og+rw "$JETTY_HOME" "$JETTY_RUN" "$TMPDIR" \
         && chown -R 1001:1001 "$JETTY_RUN" "$TMPDIR" "$JETTY_BASE" \
 	&& yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel \
-	&& (curl -0 http://www.us.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz | tar -zx -C /usr/local) \
-  && ln -sf /usr/local/apache-maven-3.3.3/bin/mvn /usr/local/bin/mvn \
 	&& yum clean all -y
 	#&& modules="$(grep -- ^--module= "$JETTY_HOME/start.ini" | cut -d= -f2 | paste -d, -s)" \
   #&& java -jar "$JETTY_HOME/start.jar" --add-to-startd="$modules,setuid"
