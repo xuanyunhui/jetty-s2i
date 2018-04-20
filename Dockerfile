@@ -30,7 +30,7 @@ RUN set -xe \
 	&& rm jetty.tar.gz* \
 	&& mkdir -p "$JETTY_BASE" \
 	&& mkdir -p "$JETTY_RUN" "$TMPDIR" \
-	&& chmod -R og+rw "$JETTY_HOME" "$JETTY_RUN" "$TMPDIR" /opt/jboss /deployments \
+	&& chmod -R og+rw "$JETTY_HOME" "$JETTY_RUN" "$TMPDIR" \
         && chown -R 1001:1001 "$JETTY_RUN" "$TMPDIR" "$JETTY_BASE" \
 	&& yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel \
 	&& yum clean all -y
@@ -39,6 +39,7 @@ RUN set -xe \
 ADD jetty-logging.xml /opt/jetty/etc/ 
 COPY run-java.sh /opt/
 RUN chmod 755 /opt/run-java.sh
+RUN sed -i 's/opt\/jboss/home\/jboss/' /etc/passwd
 
 # TODO: Set labels used in OpenShift to describe the builder image
 #LABEL io.k8s.description="Platform for building xyz" \
